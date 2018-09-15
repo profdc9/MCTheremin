@@ -1,0 +1,84 @@
+
+/*
+* Hardware timer object initialization
+*/
+HardwareTimer time1(1);
+HardwareTimer time2(2);
+HardwareTimer time3(3);
+HardwareTimer time4(4);
+
+void setup() {
+
+//Initialize the counters
+initCounter1();
+initCounter2();
+initCounter3();
+initCounter4();
+//Set the counter to 0
+time1.setCount(0);
+time2.setCount(0);
+time3.setCount(0);
+time4.setCount(0);
+}
+
+void loop() {
+// put your main code here, to run repeatedly:
+delay(1000);
+
+//Print out the value of the counters
+Serial.print("Timer 1: ");
+Serial.println(time1.getCount());
+
+Serial.print("Timer 2: ");
+Serial.println(time2.getCount());
+
+Serial.print("Timer 3: ");
+Serial.println(time3.getCount());
+
+Serial.print("Timer 4: ");
+Serial.println(time4.getCount());
+
+Serial.println();
+}
+
+/*
+* Set the registers for Counter 1
+* Records pulse input on pin PA8
+*/
+void initCounter1(){
+TIMER1->regs.gen->CCMR1 |= 0x0001; // Ch. 1 as TI1
+TIMER1->regs.gen->SMCR |= 0x0007; // Ext. clk mode 1
+TIMER1->regs.gen->SMCR |= 0x0050; // TI1FP1 is the trigger
+TIMER1->regs.gen->CR1 |= 0x0001; // enable counting 
+}
+
+/*
+* Set the registers for Counter 2
+* Records pulse input on pin PA1
+*/
+void initCounter2(){
+TIMER2->regs.gen->CCMR1 |= 0x0101; // Ch. 2 as TI2 CC2S
+TIMER2->regs.gen->SMCR |= 0x0007; // Ext. clk mode 1
+TIMER2->regs.gen->SMCR |= 0x0060; // TI2FP2 is the trigger
+TIMER2->regs.gen->CR1 |= 0x0001; // enable counting 
+}
+/*
+* Set the registers for Counter 3
+* Records pulse input on pin PA6
+*/
+void initCounter3(){
+TIMER3->regs.gen->CCMR2 |= 0x0000; // Ch. 3 as TI3
+TIMER3->regs.gen->SMCR |= 0x0007; // Ext. clk mode 1
+TIMER3->regs.gen->SMCR |= 0x0050; // TI1FP1 is the trigger
+TIMER3->regs.gen->CR1 |= 0x0001; // enable counting 
+}
+/*
+* Set the registers for Counter 4
+* Records pulse input on pin PB7
+*/
+void initCounter4(){
+TIMER4->regs.gen->CCMR2 |= 0x0001; // Ch. 4 as TI4
+TIMER4->regs.gen->SMCR |= 0x0007; // Ext. clk mode 1
+TIMER4->regs.gen->SMCR |= 0x0060; // TI2FP2 is the trigger
+TIMER4->regs.gen->CR1 |= 0x0001; // enable counting 
+}
