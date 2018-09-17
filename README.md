@@ -8,3 +8,5 @@ It consists of three parts:
 MCTheremin directory - the stm32duino project
 
 board - the PCB board in Kicad of the theremin.
+
+genwaves - little octave script to generate the waveform data
