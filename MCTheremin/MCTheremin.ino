@@ -229,13 +229,13 @@ void loop() {
     }  else
        volumelevel = 0xFF;
     skipsamples = avgpitchcount - (pitchcountfilter*MCTHEREMIN_CALIB_MULT)/COUNTFILTERTOTAL;
-    //  DEBUGMSG("skipsamples=%d",skipsamples);
+    //DEBUGMSG("skipsamples=%d",skipsamples);
     if (skipsamples > 0)
        skipsamples = (skipsamples * pitchscalefactor)/MCTHEREMIN_CALIB_MULT;
     else
        skipsamples = 0;     
-    //  DEBUGMSG("skipsamples=%u pitchcountfilter=%u volumecountfilter=%u",skipsamples,(pitchcountfilter*MCTHEREMIN_CALIB_MULT)/COUNTFILTERTOTAL,volumecountfilter);
-    // DEBUGMSG("avgpitchcount=%u volumelevel=%u",avgpitchcount,volumelevel);
+    //DEBUGMSG("skipsamples=%u pitchcountfilter=%u volumecountfilter=%u",skipsamples,(pitchcountfilter*MCTHEREMIN_CALIB_MULT)/COUNTFILTERTOTAL,volumecountfilter);
+    //DEBUGMSG("avgpitchcount=%u volumelevel=%u",avgpitchcount,volumelevel);
     if (buttonPanel.getButtonState(0))
     {
         calibrate();
