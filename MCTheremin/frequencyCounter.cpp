@@ -26,102 +26,12 @@ freely, subject to the following restrictions:
 
 HardwareTimer time1(1);
 HardwareTimer time2(2);
-HardwareTimer timeb(3);
 
-enum freq_counter_state { FREQ_COUNTER_IDLE, FREQ_COUNTER_ARMED, FREQ_COUNTER_PULSES };
-enum freq_counter_read_state { FREQ_COUNTER_READ_IDLE, FREQ_COUNTER_READ_WAITING, FREQ_COUNTER_READ_READY };
-
-typedef struct _active_counter
+void FrequencyCounter::readUpdate(unsigned int &counts1, unsigned int &counts2)
 {
-	freq_counter_state state;
-	freq_counter_read_state state_read;
-	unsigned short count_last1, count_last2;
-	unsigned int total_counts1, total_counts2;
-	unsigned int number_of_ticks;
-	unsigned int read_total_counts1, read_total_counts2;
-	unsigned int read_number_of_ticks;
-  unsigned int stop_acquire_ticks;
-  AuxCounterFunction aux_fcn;
-} freq_active_counter;
-
-static volatile freq_active_counter active_ctr;
-
-static void freqCounterInterrupt(void)
-{
-	unsigned short current_cnt2 = time2.getCount();  // must be first in interrupt!
-  unsigned short current_cnt1 = time1.getCount();  // must be first in interrupt!
-  if (active_ctr.aux_fcn != NULL)
-      (*active_ctr.aux_fcn)();
-	if (active_ctr.state == FREQ_COUNTER_PULSES)
-	{
-		active_ctr.number_of_ticks++;
-	  active_ctr.total_counts2 += (current_cnt2 - active_ctr.count_last2) & 0xFFFF;
-    active_ctr.total_counts1 += (current_cnt1 - active_ctr.count_last1) & 0xFFFF;
-		active_ctr.count_last2 = current_cnt2;
-    active_ctr.count_last1 = current_cnt1;
-		if ((active_ctr.state_read == FREQ_COUNTER_READ_WAITING) && (active_ctr.number_of_ticks >= active_ctr.stop_acquire_ticks))
-		{
-			active_ctr.read_number_of_ticks = active_ctr.number_of_ticks;
-			active_ctr.read_total_counts2 = active_ctr.total_counts2;
-      active_ctr.read_total_counts1 = active_ctr.total_counts1;
-      active_ctr.total_counts2 = 0;
-      active_ctr.total_counts1 = 0;
-      active_ctr.number_of_ticks = 0;
-			active_ctr.state_read = FREQ_COUNTER_READ_READY;
-		}
-		return;
-	} else if (active_ctr.state == FREQ_COUNTER_ARMED)
-	{
-    active_ctr.count_last2 = current_cnt2;
-		active_ctr.count_last1 = current_cnt1;
-		active_ctr.total_counts2 = 0;
-    active_ctr.total_counts1 = 0;
-		active_ctr.number_of_ticks = 0;
-		active_ctr.state = FREQ_COUNTER_PULSES;
-		return;
-	}
+  counts1 = time1.getCount();
+  counts2 = time2.getCount();
 }
-
-void FrequencyCounter::armCounter(void)
-{
-  active_ctr.state = FREQ_COUNTER_IDLE;
-  active_ctr.state_read = FREQ_COUNTER_READ_IDLE; 
-	active_ctr.state = FREQ_COUNTER_ARMED;
-}
-
-void FrequencyCounter::requestUpdate(unsigned int stopticks)
-{
-	active_ctr.read_total_counts1 = 0;
-  active_ctr.read_total_counts2 = 0;
-	active_ctr.read_number_of_ticks = 0;
-	active_ctr.state_read = FREQ_COUNTER_READ_WAITING;
-  active_ctr.stop_acquire_ticks = stopticks;
-}
-
-void FrequencyCounter::readUpdate(unsigned int &counts1, unsigned int &counts2, unsigned int &ticks)
-{
- 	if (active_ctr.state_read != FREQ_COUNTER_READ_READY)
-  {
-    counts1 = counts2 = ticks = 0;
-    return;
-  }
-  counts1 = active_ctr.read_total_counts1;
-  counts2 = active_ctr.read_total_counts2;
-  ticks = active_ctr.read_number_of_ticks;
-  return;
-}
-
-void FrequencyCounter::stopCounter(void)
-{ 
-  active_ctr.state = FREQ_COUNTER_IDLE;
-  return;
-}
-
-void FrequencyCounter::setAuxFunction(AuxCounterFunction pAuxFcn)
-{
-   active_ctr.aux_fcn = pAuxFcn;
-}
-
 
 void FrequencyCounter::setup(void)
 {
@@ -148,16 +58,4 @@ void FrequencyCounter::setup(void)
   TIMER1->regs.gen->CR1 |= 0x0001; // enable counting 
   time1.refresh();
   time1.resume();
-
-  active_ctr.state = FREQ_COUNTER_IDLE;
-  active_ctr.state_read = FREQ_COUNTER_READ_IDLE;
-  active_ctr.aux_fcn = NULL;
-  timeb.pause();
-  timeb.setCount(0);
-  timeb.setPrescaleFactor(prescaleFactor);
-  timeb.setOverflow(checkInterval);
-  timeb.setCompare(TIMER_CH1, 1);
-  timeb.attachCompare1Interrupt(freqCounterInterrupt);
-  timeb.refresh();
-  timeb.resume();
 }

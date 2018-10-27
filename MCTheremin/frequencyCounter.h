@@ -31,21 +31,12 @@ class FrequencyCounter
 {
 	public:
 
-  unsigned short checkInterval;
-  unsigned short prescaleFactor;
-  
-	FrequencyCounter(unsigned short pCheckInterval, unsigned short pPrescaleFactor=8)
+	FrequencyCounter(unsigned short num)
 	{
-    checkInterval = pCheckInterval;
-    prescaleFactor = pPrescaleFactor;
 	};
-	
-	void setup(void);
-	void armCounter(void);
-	void requestUpdate(unsigned int stopticks);
-	void readUpdate(unsigned int &counts1, unsigned int &counts2, unsigned int &ticks);
-  void stopCounter(void);
-  void setAuxFunction(AuxCounterFunction pAuxFcn);
+
+  void readUpdate(unsigned int &counts1, unsigned int &counts2);
+  void setup(void);
 };
 
 #endif /* _INVFREQUENCYCOUNTER_H */

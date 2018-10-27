@@ -63,7 +63,7 @@ class ButtonPanel
 };
 
 extern ButtonPanel *interruptButtons;
-void pollButtons_interrupt(void);
+void pollButtonsInterrupt(void);
 
 #endif /* _BUTTONPANEL_H */
 

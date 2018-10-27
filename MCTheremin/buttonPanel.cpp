@@ -42,7 +42,7 @@ static void initialize_cortex_m3_cycle_counter(void)
 
 ButtonPanel *interruptButtons = NULL;
 
-void pollButtons_interrupt(void)
+void pollButtonsInterrupt(void)
 {
    if (interruptButtons != NULL)
       interruptButtons->pollButtons();
@@ -110,6 +110,9 @@ void ButtonPanel::setup(void)
   last_button_state = BUTTON_STATE_CAPTURING;
   ticksBetweenChecks = (BUTTONPANEL_CPU_CLOCK_RATE / 1000ul) * msBetweenChecks;
   lasttick = CPU_CYCLES;
+  
+  interruptButtons = this;
+
 }
 
 
