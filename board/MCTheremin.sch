@@ -1953,7 +1953,7 @@ L R R25
 U 1 1 5B9E7551
 P 5650 5300
 F 0 "R25" V 5730 5300 50  0000 C CNN
-F 1 "1k" V 5650 5300 50  0000 C CNN
+F 1 "220R" V 5650 5300 50  0000 C CNN
 F 2 "Resistors_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 5580 5300 50  0001 C CNN
 F 3 "" H 5650 5300 50  0001 C CNN
 	1    5650 5300
@@ -2185,7 +2185,6 @@ Wire Wire Line
 	5650 5450 5650 5550
 Wire Wire Line
 	9950 3600 10200 3600
-Connection ~ 3750 5050
 Wire Wire Line
 	2550 5050 3800 5050
 Connection ~ 2550 5400
@@ -2522,13 +2521,8 @@ Connection ~ 4400 6100
 Wire Wire Line
 	4400 6150 4400 6100
 Connection ~ 4500 5150
-Connection ~ 4650 5050
 Wire Wire Line
-	3750 4800 4650 4800
-Wire Wire Line
-	3750 5050 3750 4800
-Wire Wire Line
-	4650 4800 4650 5150
+	4650 5150 4650 5050
 Wire Wire Line
 	4750 5050 4650 5050
 Wire Wire Line
@@ -2540,7 +2534,7 @@ Wire Wire Line
 Wire Wire Line
 	4000 4750 4000 4850
 Wire Wire Line
-	4650 5150 4400 5150
+	4400 5150 4650 5150
 Wire Wire Line
 	4500 5600 4500 5150
 Wire Wire Line
@@ -2687,7 +2681,7 @@ Wire Wire Line
 Wire Wire Line
 	2200 1300 1850 1300
 Wire Wire Line
-	1850 1300 1850 850 
+	1850 850  1850 1300
 Wire Wire Line
 	1400 850  1950 850 
 Wire Wire Line
